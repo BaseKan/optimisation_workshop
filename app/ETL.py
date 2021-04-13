@@ -7,20 +7,13 @@ def load_data_from_file(datapath, filename):
     return pd.read_csv(path).assign(jaar =  filename.split('_')[2][:4],
                                                          dso = filename.split('_')[0])
 
-def load_timeseries_data(basepath='C:/Data/Code/EnergieKaart/data', type = 'Electricity'):
+def load_timeseries_data(basepath='/Users/tim/Documents/Tutorials/Kennissessie-optimalisatie/optimisation_workshop/data', type = 'Electricity'):
     datapath = os.path.join(basepath,type)
     files = os.listdir(datapath)
     files = [filename for filename in files if int(filename.split('_')[2][:4])>= 2017]
     dsos = ['liander','enexis','stedin']
     files = [filename for filename in files if any(dso in filename for dso in dsos)]
-    # first file
-    file = files[0]
-    df = load_data_from_file(datapath,file)
-
-    # loop over other files
-    for file in files[1:]:
-        temp_df = load_data_from_file(datapath,file)
-        df = pd.concat([df,temp_df])
+    df = pd.concat([load_data_from_file(datapath, file) for file in files])
     return df
 
 def calculate_top_ten(df):

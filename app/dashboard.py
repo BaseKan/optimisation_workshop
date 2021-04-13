@@ -61,7 +61,7 @@ def render_page_content(pathname):
 
 def update_dso_table(n_clicks, year, dso):
     start = time.time()
-    df = load_data_from_file(datapath='C:/Data/Code/EnergieKaart/data/Electricity',filename=dso+'_electricity_'+str(year)+'.csv')
+    df = load_data_from_file(datapath='/Users/tim/Documents/Tutorials/Kennissessie-optimalisatie/optimisation_workshop/data/Electricity',filename=dso+'_electricity_'+str(year)+'.csv')
     df = calculate_top_ten(df=df)
     end = time.time()
     rekentijd_str = str(round(end-start,3))+' seconden'
