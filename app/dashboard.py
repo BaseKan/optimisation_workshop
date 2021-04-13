@@ -10,7 +10,7 @@ from dash.dependencies import Input, Output, State
 
 import plotly.express as px
 
-from app.ETL import load_data, calculate_top_ten, calculate_timeseries
+from app.ETL import load_data_from_file, load_timeseries_data, calculate_top_ten, calculate_timeseries
 from app import page_jaarverbruik, page_tijdreeks
 import time
 
@@ -61,8 +61,8 @@ def render_page_content(pathname):
 
 def update_dso_table(n_clicks, year, dso):
     start = time.time()
-    df = load_data()
-    df = calculate_top_ten(df=df,year=year,dso=dso)
+    df = load_data_from_file(datapath='C:/Data/Code/EnergieKaart/data/Electricity',filename=dso+'_electricity_'+str(year)+'.csv')
+    df = calculate_top_ten(df=df)
     end = time.time()
     rekentijd_str = str(round(end-start,3))+' seconden'
     return df.to_dict('records'), rekentijd_str
@@ -74,9 +74,9 @@ def update_dso_table(n_clicks, year, dso):
 
 def update_timeseries_figure(n_clicks, cities):
     start = time.time()
-    elec = load_data()
-    gas = load_data(type='Gas')
-    df = calculate_timeseries(df_elec=elec,df_gas=gas, cities=cities)
+    df_elec = load_timeseries_data()
+    df_gas = load_timeseries_data(type='Gas')
+    df = calculate_timeseries(df_elec=df_elec,df_gas=df_gas, cities=cities)
     fig = px.line(df.sort_values('Jaar'), x='Jaar', y='Gemiddeld_verbruik', color='Stad')
     end = time.time()
     rekentijd_str = str(round(end-start,3))+' seconden'
